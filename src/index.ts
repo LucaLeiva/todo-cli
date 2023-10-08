@@ -1,46 +1,47 @@
+import { OpcionEnum } from "./enum/OpcionEnum.js";
 import { guardarDb, leerDb } from "./helpers/db.js";
-import { menuInquirer, pausa, leerEntrada, listarTareasParaBorrar, confirmar, listarTareasConChecklist } from "./helpers/inquirer.js";
+import { menuInquirer, pausa, leerEntrada, obtenerTareasParaBorrar, confirmar, obtenerTareasConChecklist } from "./helpers/inquirer.js";
 import Tarea from "./models/tarea.js";
 import Tareas from "./models/tareas.js";
 
 
 const main = async() => {
 
-    let opcion: string = "";
+    let opcion: OpcionEnum;
     const tareas: Tareas = new Tareas();
 
-    const tareasDb: Array<Tarea> | null = leerDb();
+    const tareasDb: Tarea[] | null = leerDb();
     if (tareasDb) {
         tareas.cargarTareasDesdeArray(tareasDb);
     }
 
     do {
         opcion = await menuInquirer();
-        
+
         switch (opcion) {
-            case "1":
+            case OpcionEnum.CREAR_TAREA:
                 const descripcion = await leerEntrada("Descripción:");
                 tareas.crearTarea(descripcion);
                 break;
-            case "2":
+            case OpcionEnum.LISTAR_TAREAS:
                 tareas.imprimirTodasLasTareas();
                 break;
-            case "3":
+            case OpcionEnum.LISTAR_TAREAS_COMPLETADAS:
                 tareas.imprimirTareasPorEstado(true);
                 break;
-            case "4":
+            case OpcionEnum.LISTAR_TAREAS_PENDIENTES:
                 tareas.imprimirTareasPorEstado(false);
                 break;
-            case "5":
-                const ids = await listarTareasConChecklist(tareas.getTodasLasTareas);
+            case OpcionEnum.COMPLETAR_TAREA:
+                const ids = await obtenerTareasConChecklist(tareas.getTodasLasTareas);
                 tareas.cambiarEstadoDeTareas(ids);
                 break;
-            case "6":
-                const id: string = await listarTareasParaBorrar(tareas.getTodasLasTareas);
+            case OpcionEnum.BORRAR_TAREA:
+                const id: string = await obtenerTareasParaBorrar(tareas.getTodasLasTareas);
                 if (id !== "0") {
                     const ok: boolean = await confirmar("¿Está seguro de que desea borrarlo?");
                     if (ok) {
-                        tareas.deleteTarea(id);
+                        tareas.borrarTarea(id);
                         console.log("Tarea borrada correctamente");
                     }
                 }
@@ -50,7 +51,7 @@ const main = async() => {
         guardarDb(tareas.getTodasLasTareas);
 
         await pausa();
-    } while (opcion !== "0");
+    } while (opcion !== OpcionEnum.SALIR);
 }
 
 main();

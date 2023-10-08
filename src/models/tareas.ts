@@ -10,7 +10,7 @@ interface IListado {
 
 
 export default class Tareas {
-    listado: IListado;
+    private listado: IListado;
 
     constructor() {
         this.listado = {};
@@ -39,8 +39,9 @@ export default class Tareas {
     }
 
     public imprimirTodasLasTareas() {
+        console.log("\n");
+
         this.getTodasLasTareas.forEach((tarea, index) => {
-            console.log("\n");
 
             const idx = colors.green(`${index + 1}.`);
             const { descripcion, completadoEn } = tarea;
@@ -67,7 +68,7 @@ export default class Tareas {
             })
     }
 
-    public deleteTarea(id: string) {
+    public borrarTarea(id: string) {
         if (this.listado[id]) {
             delete this.listado[id];
         }

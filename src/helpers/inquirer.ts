@@ -2,6 +2,7 @@ import inquirer, { Answers } from "inquirer";
 import { QuestionCollection } from "inquirer";
 import colors from "colors/safe.js";
 import Tarea from "../models/tarea";
+import { OpcionEnum } from "../enum/OpcionEnum.js";
 
 
 const preguntas: QuestionCollection<Answers> = [
@@ -11,38 +12,38 @@ const preguntas: QuestionCollection<Answers> = [
         message: "¿Qué desea hacer?",
         choices: [
             {
-                value: "1",
+                value: OpcionEnum.CREAR_TAREA,
                 name: `${colors.green("1.")} Crear tarea`
             },
             {
-                value: "2",
+                value: OpcionEnum.LISTAR_TAREAS,
                 name: `${colors.green("2.")} Listar tareas`
             },
             {
-                value: "3",
+                value: OpcionEnum.LISTAR_TAREAS_COMPLETADAS,
                 name: `${colors.green("3.")} Listar tareas completadas`
             },
             {
-                value: "4",
-                name: `${colors.green("4.")} Listar pendientes`
+                value: OpcionEnum.LISTAR_TAREAS_PENDIENTES,
+                name: `${colors.green("4.")} Listar tareas pendientes`
             },
             {
-                value: "5",
+                value: OpcionEnum.COMPLETAR_TAREA,
                 name: `${colors.green("5.")} Completar tarea(s)`
             },
             {
-                value: "6",
+                value: OpcionEnum.BORRAR_TAREA,
                 name: `${colors.green("6.")} Borrar tarea`
             },
             {
-                value: "0",
+                value: OpcionEnum.SALIR,
                 name: `${colors.green("0.")} Salir`
             },
         ]
     }
 ];
 
-export const menuInquirer = async(): Promise<string> => {
+export const menuInquirer = async(): Promise<OpcionEnum> => {
     console.clear();
     console.log(colors.green("==========================="));
     console.log(colors.white("   Seleccione una opción   "));
@@ -53,7 +54,7 @@ export const menuInquirer = async(): Promise<string> => {
     return opcion;
 }
 
-export const pausa = async() => {
+export const pausa = async(): Promise<void> => {
 
     const pregunta: QuestionCollection<Answers> = [
         {
@@ -67,7 +68,7 @@ export const pausa = async() => {
     await inquirer.prompt(pregunta);
 }
 
-export const leerEntrada = async(mensaje: string) => {
+export const leerEntrada = async(mensaje: string): Promise<string> => {
     const pregunta: QuestionCollection<Answers> = [
         {
             type: "input",
@@ -87,7 +88,7 @@ export const leerEntrada = async(mensaje: string) => {
     return descripcion;
 }
 
-export const listarTareasParaBorrar = async(tareas: Array<Tarea>): Promise<string> => {
+export const obtenerTareasParaBorrar = async(tareas: Tarea[]): Promise<string> => {
     const elecciones: Array<Answers> = tareas.map((tarea, index) => {
         const idx = colors.green(`${index + 1}`);
         return {
@@ -115,7 +116,7 @@ export const listarTareasParaBorrar = async(tareas: Array<Tarea>): Promise<strin
     return id;
 }
 
-export const confirmar = async(mensaje: string) => {
+export const confirmar = async(mensaje: string): Promise<boolean> => {
     const pregunta: QuestionCollection<Answers> = [
         {
             type: "confirm",
@@ -129,7 +130,7 @@ export const confirmar = async(mensaje: string) => {
     return ok;
 }
 
-export const listarTareasConChecklist = async(tareas: Array<Tarea>) => {
+export const obtenerTareasConChecklist = async(tareas: Tarea[]): Promise<string[]> => {
     const elecciones: Array<Answers> = tareas.map((tarea, index) => {
         const idx = colors.green(`${index + 1}`);
         return {
