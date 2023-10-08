@@ -1,0 +1,26 @@
+{
+  "name": "3_cli-tareas-por-hacer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "tsc && node build/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/inquirer": "^9.0.3",
+    "@types/node": "^20.6.5",
+    "@types/uuid": "^9.0.4",
+    "@types/yargs": "^17.0.26",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "inquirer": "^9.2.11",
+    "uuid": "^9.0.1",
+    "yargs": "^17.7.2"
+  }
+}
